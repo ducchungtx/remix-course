@@ -8,6 +8,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteError,
 } from '@remix-run/react';
 import MainNavigation from '~/components/MainNavigation';
 import styles from '~/styles/main.css';
@@ -44,7 +45,9 @@ export default function App() {
   );
 }
 
-export const ErrorBoundary = ({ error }: any) => {
+export const ErrorBoundary = () => {
+  const error = useRouteError();
+  console.error(error);
   return (
     <html lang="en">
       <head>
@@ -63,7 +66,7 @@ export const ErrorBoundary = ({ error }: any) => {
         </header>
         <main>
           <h1>An error occurred!</h1>
-          <p>{error.message}</p>
+          <p></p>
           <p>Back to <Link to=".">safety</Link></p>
         </main>
         <ScrollRestoration />
