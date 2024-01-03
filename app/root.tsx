@@ -64,7 +64,7 @@ export const ErrorBoundary = () => {
         <header>
           <MainNavigation />
         </header>
-        <main>
+        <main className='error'>
           <h1>An error occurred!</h1>
           <p></p>
           <p>Back to <Link to=".">safety</Link></p>

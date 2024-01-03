@@ -1,5 +1,5 @@
-import { ActionFunctionArgs, redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { ActionFunctionArgs, json, redirect } from '@remix-run/node';
+import { Link, isRouteErrorResponse, useLoaderData, useRouteError } from '@remix-run/react';
 
 import NewNote, { links as newNoteLinks } from '~/components/NewNote';
 import NoteList, {
@@ -20,6 +20,9 @@ export default function NotesPage() {
 
 export const loader = async () => {
   const notes = await getStoredNotes();
+  if(!notes || notes.length === 0) {
+    throw json({ message: 'No notes found' }, { status: 404 });
+  }
   return notes;
 };
 
@@ -42,3 +45,26 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const links = () => {
   return [...newNoteLinks(), ...noteListLinks()];
 };
+
+export const ErrorBoundary = () => {
+  const error = useRouteError();
+
+  // when true, this is what used to go to `CatchBoundary`
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        <h1>Oops</h1>
+        <p>Status: {error.status}</p>
+        <p>{error.data.message}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h1>Uh oh ...</h1>
+      <p>Something went wrong.</p>
+      {/* <pre>{errorMessage}</pre> */}
+    </div>
+  );
+}
