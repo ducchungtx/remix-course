@@ -1,11 +1,13 @@
 import Note from "~/models/Note";
 import styles from "./NoteList.css";
+import { Link } from "@remix-run/react";
 
 export default function NoteList({ notes }: { notes: Array<Note> }) {
   return (
     <ul id="note-list">
       {notes.map((note, index) => (
         <li key={note.id} className="note">
+          <Link to={note.id}>
           <article>
             <header>
               <ul className="note-meta">
@@ -26,6 +28,8 @@ export default function NoteList({ notes }: { notes: Array<Note> }) {
             </header>
             <p>{note.content}</p>
           </article>
+          </Link>
+
         </li>
       ))}
     </ul>

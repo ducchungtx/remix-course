@@ -8,6 +8,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
   useRouteError,
 } from '@remix-run/react';
 import MainNavigation from '~/components/MainNavigation';
@@ -45,30 +46,36 @@ export default function App() {
   );
 }
 
-export const ErrorBoundary = () => {
+export function ErrorBoundary() {
   const error = useRouteError();
-  console.error(error);
+
+  let statusText = "An error occured!";
+  let errorMessage = "Something went wrong! Please try again later.";
+
+  // This is for CatchBoundary
+  if (isRouteErrorResponse(error)) {
+      statusText ??= error.statusText;
+      errorMessage ??= error.data?.message;
+  }
+
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <title>An error occurred!</title>
+        <title>{error.statusText}</title>
       </head>
       <body>
-        <header>
-          <MainNavigation />
-        </header>
-        <main className='error'>
-          <h1>An error occurred!</h1>
-          <p></p>
-          <p>Back to <Link to=".">safety</Link></p>
+        <main className="error">
+          <h1>{statusText}</h1>
+          <p>{errorMessage}</p>
+          <p>
+            Go back to <Link to="/">safety</Link>
+          </p>
         </main>
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
