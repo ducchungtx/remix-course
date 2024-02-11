@@ -1,3 +1,4 @@
+import { MetaFunction } from '@remix-run/node';
 import { Link, json, useLoaderData } from '@remix-run/react';
 import { getStoredNotes } from '~/data/notes';
 import Note from '~/models/Note';
@@ -32,3 +33,7 @@ export const loader = async ({ params }: any) => {
 export function links() {
   return [{ rel: 'stylesheet', href: styles }];
 }
+
+export const meta: MetaFunction = ({ data }: { data: any }) => {
+  return [{ title: data.title! }, { description: data.content! }];
+};
